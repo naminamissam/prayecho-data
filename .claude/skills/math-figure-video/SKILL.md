@@ -30,12 +30,19 @@ status: draft   # 나중에 완성 (2026-07-20): prism/단면/라벨 미완, 데
      # 산출: media/videos/solid_anim/1000p30/SolidAnim.mov (영상 위 합성용)
      ```
    - **2D 증명/작도** `scripts/pythagoras_proof.py`: 유클리드 피타고라스 증명(전단 이동).
-     흰 배경 교재풍, 4단계(도형→왼쪽세트→오른쪽세트→색칠), 한글 캡션 포함.
+     교재풍, 단계별 씬으로 분리 — `Phase1`(도형) `Phase2`(왼쪽) `Phase3`(오른쪽)
+     `Phase4`(색칠) + `Full`(통합). 한글 캡션 포함.
      ```bash
+     # 흰 배경 mp4:
      /tmp/manim-venv/bin/manim -r 1920,1080 --fps 30 --format mp4 \
-       scripts/pythagoras_proof.py Pyth
+       scripts/pythagoras_proof.py Phase1     # 또는 Phase2/3/4/Full
+     # 투명 배경 mov(오버레이용, argb):
+     TRANSPARENT=1 /tmp/manim-venv/bin/manim -r 1920,1080 --fps 30 -t --format mov \
+       scripts/pythagoras_proof.py Full
      ```
-     좌표 매핑 함수 `P()` 하나로 모든 요소를 그리는 패턴 — 다른 평면 기하 증명의 템플릿으로 재사용.
+     배경은 `TRANSPARENT` 환경변수 + `-t`로 분기. 좌표 매핑 함수 `P()` 하나로 모든 요소를
+     그리는 패턴 — 다른 평면 기하 증명의 템플릿으로 재사용. (`scripts/render_all.sh`에
+     5씬×2배경 일괄 렌더 예시.)
 
 3. **오버레이 (overlay)**  — `scripts/overlay.sh`, **검은 카드 없이 도형만**
    ```bash
