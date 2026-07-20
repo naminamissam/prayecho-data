@@ -28,17 +28,15 @@ python3 -m venv /tmp/manim-venv
   원인은 Debian 패치 setuptools. **venv가 근본 해결.**
 - `manimpango` manylinux 휠 없음 → 소스 빌드 → `pangocairo` .pc 필요 → 위 apt로 해결.
 
-## 3) 한글 라벨 폰트 (선택)
-시스템에 한글 TTF가 없다. 필요하면 Noto Sans KR woff2를 ttf로 변환해 사용:
+## 3) 한글 폰트 (Manim Text·캡션에 필요)
+전체 CJK 폰트를 apt로 설치 — 이게 가장 확실(임의 한글 렌더 가능):
 ```bash
-/tmp/manim-venv/bin/pip install fonttools brotli
-/tmp/manim-venv/bin/python - <<'PY'
-from fontTools.ttLib import TTFont; import glob
-src=sorted(glob.glob('/root/.cache/hyperframes/fonts/noto-sans-kr/700-normal-*.woff2'))[0]
-ft=TTFont(src); ft.flavor=None; ft.save('/tmp/kr700.ttf')
-PY
+apt-get install -y fonts-noto-cjk
+# Manim: Text("넓이가 같다", font="Noto Sans CJK KR")
+# ffmpeg drawtext: fontfile=/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc
 ```
-주의: 위 캐시는 **서브셋**(그때 렌더한 글자만 포함). 임의 한글엔 전체 Noto Sans KR ttf 필요.
+(대안: hyperframes 캐시의 Noto Sans KR **서브셋** woff2를 fonttools로 ttf 변환 — 단, 그때
+렌더한 글자만 포함하므로 임의 한글엔 부적합. 위 apt 설치를 우선.)
 
 ## 비고
 - HyperFrames/Chrome는 이 스킬에선 불필요(Manim 확정). 설치 기록만 남김:
